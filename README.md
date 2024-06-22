@@ -1,6 +1,41 @@
 # UltraplexFrontend
 
+Technical test, set as part of the application process for a startup. A cinema management tool. The test was timeboxed to eight hours. 
+
+### Business requirements
+
+* A cinema has multiple screens.
+* A movie can be played on multiple screens (in multiple cinemas).
+* A screen can show multiple movies on a day.
+* A screening of a movie can have multiple bookings.
+
+### Tasks
+
+* Create a dashboard that shows the number of
+
+    * Cinemas
+    * Screens
+    * Movies
+    * Bookings
+
+* The user should be able to
+
+    * List all cinemas and add new cinemas
+    * List all screens for a specific cinema and add a new screen for a specific cinema
+    * List all movies and add a specific movie
+    * Create a screening (for a specific screen and a specific movie at a certain time
+    * Create a booking for a specific screening adding the number of seats
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.5.
+
+## ToDo
+
+* Reduce code replication around tables and dialogs (already started)
+* DataSource layer between tables and services?
+* Unit tests
+* e2e tests
+* Comments and documentation
+* Improve look / feel
 
 ## Development server
 
