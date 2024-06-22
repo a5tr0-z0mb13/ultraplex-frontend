@@ -1,0 +1,49 @@
+
+<h2 mat-dialog-title>Add new screening</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <mat-form-field appearance="outline">
+      <mat-label>Screen</mat-label>
+
+      <mat-select formControlName="screenId">
+        @for (screen of screens; track screen.id) {
+          <mat-option [value]="screen.id">{{screen.name}}</mat-option>
+        }
+      </mat-select>
+
+      @if (formGroup.get('sreenId')?.errors?.['required']) {
+        <mat-error>Please select a screen</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Movie</mat-label>
+
+      <mat-select formControlName="movieId">
+        @for (movie of movies; track movie.id) {
+          <mat-option [value]="movie.id">{{movie.name}}</mat-option>
+        }
+      </mat-select>
+
+      @if (formGroup.get('movieId')?.errors?.['required']) {
+        <mat-error>Please select a movie</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Start time</mat-label>
+
+      <input type="datetime-local" required matInput formControlName="startTime">
+
+      @if (formGroup.get('startTime')?.errors?.['required']) {
+        <mat-error>Please select a start time</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button (click)="ok()" [disabled]="formGroup.invalid">OK</button>
+</mat-dialog-actions>

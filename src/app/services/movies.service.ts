@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Movie, MovieRequestBody, Response } from '../models';
-import { APIService } from './api.service';
+import { APICreateParams, APIListParams, APIService } from './api.service';
 
 /**
  * Movies service
@@ -11,16 +11,14 @@ import { APIService } from './api.service';
 @Injectable({
   providedIn: 'root',
 })
-export class MoviesService {
+export class MoviesService extends APIService<MovieRequestBody, Movie> {
   private readonly path: string = '/movies';
 
-  constructor(private apiService: APIService<MovieRequestBody, Movie>) {}
-
-  public list(page?: number, size?: number, sort?: string): Observable<Response<Movie>> {
-    return this.apiService.list(this.path, page, size, sort);
+  public list({ page, size, sort }: APIListParams): Observable<Response<Movie>> {
+    return this._list(this.path, page, size, sort);
   }
 
-  public create(body: MovieRequestBody): Observable<null> {
-    return this.apiService.create(this.path, body);
+  public create({ body }: APICreateParams<MovieRequestBody>): Observable<null> {
+    return this._create(this.path, body);
   }
 }

@@ -7,18 +7,35 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Response } from '../models';
 
+export interface APIListParams {
+  cinemaId?: string | number;
+  page?: number;
+  size?: number;
+  sort?: string;
+};
+
+export interface APICreateParams<T> {
+  cinemaId?: string | number;
+  screenId?: string | number;
+  body: T;
+};
+
 /**
  * Generic API service
  */
 @Injectable({
   providedIn: 'root',
 })
-export class APIService<TReq, TRes> {
+export abstract class APIService<TReq, TRes> {
   private readonly url: string = environment.cinemas.api.url;
 
   constructor(private httpClient: HttpClient) {}
 
-  public list(path: string, page?: number, size?: number, sort?: string): Observable<Response<TRes>> {
+  public abstract list(params: APIListParams): Observable<Response<TRes>>;
+
+  public abstract create(params: APICreateParams<TReq>): Observable<null>;
+
+  protected _list(path: string, page?: number, size?: number, sort?: string): Observable<Response<TRes>> {
     const url = `${this.url}${path}`;
 
     const params: HttpParams = new HttpParams({
@@ -30,7 +47,7 @@ export class APIService<TReq, TRes> {
     return this.httpClient.get<Response<TRes>>(url, { params });
   }
 
-  public create(path: string, body: TReq): Observable<null> {
+  protected _create(path: string, body: TReq): Observable<null> {
     const url = `${this.url}${path}`;
 
     return this.httpClient.put<null>(url, body);

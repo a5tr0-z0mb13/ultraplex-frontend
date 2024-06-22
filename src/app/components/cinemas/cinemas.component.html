@@ -1,0 +1,48 @@
+<div class="mat-elevation-z8">
+  <mat-toolbar class="ultraplex-toolbar">
+    Cinemas
+    <div class="ultraplex-button-group">
+      <button mat-flat-button (click)="create()">
+        <mat-icon>add</mat-icon> Add cinema
+      </button>
+      <button mat-flat-button (click)="book()">
+        <mat-icon>confirmation_number</mat-icon> Book tickets
+      </button>
+    </div>
+  </mat-toolbar>
+
+  <table mat-table multiTemplateDataRows [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let row">{{row.id}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let row">{{row.name}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <div class="ultraplex-button-group">
+          <button mat-stroked-button [disabled]="row.screens.length === 0" (click)="navigate(row.id, 'screens')"
+            matBadge="{{row.screens.length}}"
+            matBadgePosition="after">
+            View Screens
+          </button>
+
+          <button mat-stroked-button [disabled]="row.screens.length === 0" (click)="navigate(row.id, 'screenings')">
+            View Screenings
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnDefs"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnDefs;"></tr>
+  </table>
+
+  <mat-paginator [length]="length" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 50]">
+  </mat-paginator>
+</div>

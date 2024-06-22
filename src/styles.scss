@@ -1,4 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@use "@angular/material" as mat;
+@use "@angular/material/core/theming/palettes";
+
+$theme: mat.define-theme();
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  --mat-sidenav-container-shape: 0;
+  --mat-sidenav-container-width: 240px;
+
+  .ultraplex-toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  form {
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+  }
+}

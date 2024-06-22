@@ -1,0 +1,13 @@
+:host {
+  ::ng-deep {
+    $padding: 16px;
+
+    .mat-sidenav {
+      padding-left: $padding;
+    }
+
+    .mat-sidenav-content {
+      padding: $padding;
+    }
+  }
+}

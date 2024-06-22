@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Add new movie</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+
+      <input type="text" required matInput formControlName="name" />
+
+      @if (formGroup.get('name')?.errors?.['required']) {
+        <mat-error>Please enter a name</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Runtime</mat-label>
+
+      <input type="number" required min="0" matInput formControlName="runtime" />
+
+      @if (formGroup.get('runtime')?.errors?.['required']) {
+        <mat-error>Please enter a runtime</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button (click)="ok()" [disabled]="formGroup.invalid">OK</button>
+</mat-dialog-actions>

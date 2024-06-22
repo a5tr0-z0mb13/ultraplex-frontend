@@ -1,0 +1,49 @@
+
+<h2 mat-dialog-title>Add new screening</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <mat-form-field appearance="outline">
+      <mat-label>Cinema</mat-label>
+
+      <mat-select formControlName="cinemaId">
+        @for (cinema of cinemas; track cinema.id) {
+          <mat-option [value]="cinema.id">{{cinema.name}}</mat-option>
+        }
+      </mat-select>
+
+      @if (formGroup.get('cinemaId')?.errors?.['required']) {
+        <mat-error>Please select a screen</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Screening</mat-label>
+
+      <mat-select formControlName="screeningId">
+        @for (screening of screenings; track screening.id) {
+          <mat-option [value]="screening.id">{{screening.start}} '{{screening.movie.name}} ({{screening.movie.runtime}})'</mat-option>
+        }
+      </mat-select>
+
+      @if (formGroup.get('screeningId')?.errors?.['required']) {
+        <mat-error>Please select a screen</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Seats</mat-label>
+
+      <input type="number" required matInput formControlName="seats" />
+
+      @if (formGroup.get('seats')?.errors?.['required']) {
+        <mat-error>Please enter the number of seats</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button (click)="ok()" [disabled]="formGroup.invalid">OK</button>
+</mat-dialog-actions>

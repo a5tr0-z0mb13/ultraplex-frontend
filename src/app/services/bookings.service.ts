@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Booking, BookingRequestBody, Response } from '../models';
-import { APIService } from './api.service';
+import { APICreateParams, APIListParams, APIService } from './api.service';
 
 /**
  * Booking API service
@@ -11,16 +11,14 @@ import { APIService } from './api.service';
 @Injectable({
   providedIn: 'root',
 })
-export class BookingsService {
+export class BookingsService extends APIService<BookingRequestBody, Booking> {
   private readonly path: string = '/bookings';
 
-  constructor(private apiService: APIService<BookingRequestBody, Booking>) {}
-
-  public list(page?: number, size?: number, sort?: string): Observable<Response<Booking>> {
-    return this.apiService.list(this.path, page, size, sort);
+  public list({ page, size, sort }: APIListParams): Observable<Response<Booking>> {
+    return this._list(this.path, page, size, sort);
   }
 
-  public create(body: BookingRequestBody): Observable<null> {
-    return this.apiService.create(this.path, body);
+  public create({ body }: APICreateParams<BookingRequestBody>): Observable<null> {
+    return this._create(this.path, body);
   }
 }
