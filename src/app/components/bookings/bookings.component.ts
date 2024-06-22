@@ -1,57 +1,38 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatBadgeModule } from '@angular/material/badge';
+import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { concatMap, map, merge, startWith } from 'rxjs';
+import { Subject } from 'rxjs';
 
-import { Booking, Response } from '../../models';
-import { mapTableEvent } from '../../pipeable-operators';
 import { BookingsService, TotalElementsService } from '../../services';
+import { Column, TableContainerComponent } from '../common/table-container.component';
 
 @Component({
   standalone: true,
   imports: [
-    MatBadgeModule,
     MatButtonModule,
     MatIconModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
     MatToolbarModule,
+    TableContainerComponent,
   ],
   templateUrl: './bookings.component.html'
 })
-export class BookingsComponent implements AfterViewInit {
-  @ViewChild(MatPaginator) public paginator!: MatPaginator;
-  @ViewChild(MatSort) public sort!: MatSort;
+export class BookingsComponent {
+  private readonly key: string = 'bookings';
 
-  public columnDefs: string[] = ['id'];
+  public refresh: Subject<void> = new Subject<void>();
 
-  public dataSource: Booking[] = [];
-  public length = 0;
+  public columns: Column[] = [
+    { columnDef: 'id', header: 'ID', disabled: true },
+  ];
 
   constructor(
-    private bookingsService: BookingsService,
+    public bookingsService: BookingsService,
     private totalElementsService: TotalElementsService,
   ) {}
 
-  public ngAfterViewInit(): void {
-    merge(this.paginator.page, this.sort.sortChange).pipe(
-      startWith(void 0),
-      map(mapTableEvent(this.paginator, this.sort)),
-      concatMap(({ page, size, sort }) => this.bookingsService.list({ page, size, sort })),
-    ).subscribe(
-      (response: Response<Booking>) => {
-        this.dataSource = response.content;
-        this.length = response.totalElements;
-
-        this.totalElementsService.update('bookings', response.totalElements);
-      }
-    );
+  public totalElementsChange(totalElements: number): void {
+    this.totalElementsService.update(this.key, totalElements);
   }
 }

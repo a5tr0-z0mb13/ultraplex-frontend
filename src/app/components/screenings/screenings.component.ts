@@ -1,70 +1,50 @@
-import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { MatBadgeModule } from '@angular/material/badge';
+import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute } from '@angular/router';
 
 import { get, pick } from 'lodash';
-import { concatMap, filter, map, merge, startWith } from 'rxjs';
+import { concatMap, filter, Subject } from 'rxjs';
 
-import { Response, Screening } from '../../models';
-import { isNotUndefined, mapTableEvent } from '../../pipeable-operators';
+import { isNotUndefined } from '../../pipeable-operators';
 import { ScreeningsService } from '../../services';
+import { Column, TableContainerComponent } from '../common/table-container.component';
 import { ScreeningDialogComponent, ScreeningDialogResponse } from './screening-dialog.component';
 
 @Component({
   standalone: true,
   imports: [
-    MatBadgeModule,
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
     MatToolbarModule,
+    TableContainerComponent,
   ],
   templateUrl: './screenings.component.html',
 })
-export class ScreeningsComponent implements AfterViewInit {
-  @ViewChild(MatPaginator) public paginator!: MatPaginator;
-  @ViewChild(MatSort) public sort!: MatSort;
+export class ScreeningsComponent {
+  public refresh: Subject<void> = new Subject<void>();
 
-  @Output() public refresh: EventEmitter<void> = new EventEmitter<void>();
+  public columns: Column[] = [
+    { columnDef: 'id', header: 'ID', disabled: true },
+    { columnDef: 'cinemaName', header: 'Cinema Name' },
+    { columnDef: 'screenName', header: 'Screen Name' },
+    { columnDef: 'start', header: 'Start' },
+    { columnDef: 'movie.name', header: 'Movie' },
+  ];
 
-  public columnDefs: string[] = ['id', 'cinemaName', 'screenName', 'start', 'movie'];
-
-  public cinemaId!: string | null;
-
-  public dataSource!: Screening[];
-  public length = 0;
+  public cinemaId: string | null = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private screeningsService: ScreeningsService,
+    public screeningsService: ScreeningsService,
   ) {
     this.cinemaId = this.activatedRoute.snapshot.paramMap.get('cinemaId')!;
-  }
-
-  public ngAfterViewInit(): void {
-    merge(this.paginator.page, this.sort.sortChange, this.refresh).pipe(
-      startWith(void 0),
-      map(mapTableEvent(this.paginator, this.sort)),
-      concatMap(({ page, size, sort }) => this.screeningsService.list({ cinemaId: this.cinemaId!, page, size, sort })),
-    ).subscribe(
-      (response: Response<Screening>) => {
-        this.dataSource = response.content;
-        this.length = response.totalElements;
-      }
-    );
   }
 
   public create(): void {
@@ -76,7 +56,7 @@ export class ScreeningsComponent implements AfterViewInit {
         { cinemaId: this.cinemaId!, screenId: get(body, 'screenId'), body: pick(body, ['movieId', 'startTime']) })
       ),
     ).subscribe(() => {
-      this.refresh.emit();
+      this.refresh.next();
 
       this.snackBar.open('Screening created successfully', 'OK');
     });

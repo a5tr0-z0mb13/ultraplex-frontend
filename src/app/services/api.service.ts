@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 import { Response } from '../models';
 
 export interface APIListParams {
-  cinemaId?: string | number;
+  cinemaId?: string | number | null;
   page?: number;
   size?: number;
   sort?: string;

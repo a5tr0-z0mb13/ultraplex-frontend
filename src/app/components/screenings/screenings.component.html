@@ -7,36 +7,10 @@
     </button>
   </mat-toolbar>
 
-  <table mat-table multiTemplateDataRows [dataSource]="dataSource" matSort matSortActive="screenName" matSortDirection="asc">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>ID</th>
-      <td mat-cell *matCellDef="let row">{{row.id}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="cinemaName">
-      <th mat-header-cell *matHeaderCellDef>Cinema Name</th>
-      <td mat-cell *matCellDef="let row">{{row.cinemaName}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="screenName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Screen Name</th>
-      <td mat-cell *matCellDef="let row">{{row.screenName}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="movie">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Movie</th>
-      <td mat-cell *matCellDef="let row">{{row.movie.name}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="start">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Start</th>
-      <td mat-cell *matCellDef="let row">{{row.start}}</td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="columnDefs"></tr>
-    <tr mat-row *matRowDef="let row; columns: columnDefs;"></tr>
-  </table>
-
-  <mat-paginator [length]="length" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 50]">
-  </mat-paginator>
+  <ultraplex-table-container
+    [service]="screeningsService"
+    [params]="{ cinemaId: cinemaId }"
+    [columns]="columns"
+    [refresh]="refresh">
+  </ultraplex-table-container>
 </div>

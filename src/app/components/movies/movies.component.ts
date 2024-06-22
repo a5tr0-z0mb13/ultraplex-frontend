@@ -1,19 +1,17 @@
-import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { concatMap, filter, map, merge, startWith } from 'rxjs';
+import { concatMap, filter, Subject } from 'rxjs';
 
-import { Movie, MovieRequestBody, Response } from '../../models';
-import { isNotUndefined, mapTableEvent } from '../../pipeable-operators';
+import { MovieRequestBody } from '../../models';
+import { isNotUndefined } from '../../pipeable-operators';
 import { MoviesService, TotalElementsService } from '../../services';
+import { Column, TableContainerComponent } from '../common/table-container.component';
 import { MovieDialogComponent } from './movie-dialog.component';
 
 @Component({
@@ -22,44 +20,31 @@ import { MovieDialogComponent } from './movie-dialog.component';
     MatBadgeModule,
     MatButtonModule,
     MatIconModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
     MatToolbarModule,
+    TableContainerComponent,
   ],
   templateUrl: './movies.component.html'
 })
-export class MoviesComponent implements AfterViewInit {
-  @ViewChild(MatPaginator) public paginator!: MatPaginator;
-  @ViewChild(MatSort) public sort!: MatSort;
+export class MoviesComponent {
+  private readonly key: string = 'movies';
 
-  @Output() public refresh: EventEmitter<void> = new EventEmitter<void>();
+  public refresh: Subject<void> = new Subject<void>();
 
-  public columnDefs: string[] = ['id', 'name', 'runtime'];
-
-  public dataSource: Movie[] = [];
-  public length = 0;
+  public columns: Column[] = [
+    { columnDef: 'id', header: 'ID', disabled: true },
+    { columnDef: 'name', header: 'Name' },
+    { columnDef: 'runtime', header: 'Runtime' },
+  ];
 
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private moviesService: MoviesService,
+    public moviesService: MoviesService,
     private totalElementsService: TotalElementsService,
   ) {}
 
-  public ngAfterViewInit(): void {
-    merge(this.paginator.page, this.sort.sortChange, this.refresh).pipe(
-      startWith(void 0),
-      map(mapTableEvent(this.paginator, this.sort)),
-      concatMap(({ page, size, sort }) => this.moviesService.list({ page, size, sort })),
-    ).subscribe(
-      (response: Response<Movie>) => {
-        this.dataSource = response.content;
-        this.length = response.totalElements;
-
-        this.totalElementsService.update('movies', response.totalElements);
-      }
-    );
+  public totalElementsChange(totalElements: number): void {
+    this.totalElementsService.update(this.key, totalElements);
   }
 
   public click(): void {
@@ -69,7 +54,7 @@ export class MoviesComponent implements AfterViewInit {
       filter(isNotUndefined),
       concatMap((body: MovieRequestBody) => this.moviesService.create({ body })),
     ).subscribe(() => {
-      this.refresh.emit();
+      this.refresh.next();
 
       this.snackBar.open('Movie created successfully', 'OK');
     });
