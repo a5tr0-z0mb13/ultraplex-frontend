@@ -13,9 +13,15 @@
           [routerLink]="link.path"
           #routerLink="routerLinkActive"
           routerLinkActive
-          [activated]="routerLink.isActive"
+
           mat-list-item
-        >{{link.text}}</a>
+          [activated]="routerLink.isActive"
+
+          matBadge="{{totalElements[link.key]}}"
+          matBadgePosition="after"
+        >
+          {{link.text}}
+        </a>
       }
     </mat-nav-list>
   </mat-sidenav>

@@ -13,7 +13,7 @@ import { concatMap, filter, map, merge, startWith } from 'rxjs';
 
 import { Movie, MovieRequestBody, Response } from '../../models';
 import { isNotUndefined, mapTableEvent } from '../../pipeable-operators';
-import { MoviesService } from '../../services';
+import { MoviesService, TotalElementsService } from '../../services';
 import { MovieDialogComponent } from './movie-dialog.component';
 
 @Component({
@@ -43,7 +43,8 @@ export class MoviesComponent implements AfterViewInit {
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private moviesService: MoviesService
+    private moviesService: MoviesService,
+    private totalElementsService: TotalElementsService,
   ) {}
 
   public ngAfterViewInit(): void {
@@ -55,6 +56,8 @@ export class MoviesComponent implements AfterViewInit {
       (response: Response<Movie>) => {
         this.dataSource = response.content;
         this.length = response.totalElements;
+
+        this.totalElementsService.update('movies', response.totalElements);
       }
     );
   }

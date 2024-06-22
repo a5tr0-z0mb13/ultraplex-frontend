@@ -14,7 +14,7 @@ import { concatMap, filter, map, merge, startWith } from 'rxjs';
 
 import { BookingRequestBody, Cinema, CinemaRequestBody, Response } from '../../models';
 import { isNotUndefined, mapTableEvent } from '../../pipeable-operators';
-import { BookingsService, CinemasService } from '../../services';
+import { BookingsService, CinemasService, TotalElementsService } from '../../services';
 import { BookingDialogComponent } from '../bookings/booking-dialog.component';
 import { CinemaDialogComponent } from './cinema-dialog.component';
 
@@ -51,6 +51,7 @@ export class CinemasComponent implements AfterViewInit {
     private router: Router,
     private bookingsService: BookingsService,
     private cinemasService: CinemasService,
+    private totalElementsService: TotalElementsService,
   ) {}
 
   public ngAfterViewInit(): void {
@@ -62,6 +63,8 @@ export class CinemasComponent implements AfterViewInit {
       (response: Response<Cinema>) => {
         this.dataSource = response.content;
         this.length = response.totalElements;
+
+        this.totalElementsService.update('cinemas', response.totalElements);
       }
     );
   }

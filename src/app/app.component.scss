@@ -9,5 +9,19 @@
     .mat-sidenav-content {
       padding: $padding;
     }
+
+    .mat-mdc-nav-list {
+      width: calc(100% - 16px);
+
+      .mat-badge {
+        .mat-ripple-element {
+          display: none;
+        }
+      }
+    }
+
+    .mdc-list-item:hover::before {
+      border-radius: var(--mat-list-active-indicator-shape);
+    }
   }
 }

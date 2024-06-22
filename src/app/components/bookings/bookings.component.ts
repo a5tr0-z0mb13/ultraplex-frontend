@@ -11,7 +11,7 @@ import { concatMap, map, merge, startWith } from 'rxjs';
 
 import { Booking, Response } from '../../models';
 import { mapTableEvent } from '../../pipeable-operators';
-import { BookingsService } from '../../services';
+import { BookingsService, TotalElementsService } from '../../services';
 
 @Component({
   standalone: true,
@@ -35,7 +35,10 @@ export class BookingsComponent implements AfterViewInit {
   public dataSource: Booking[] = [];
   public length = 0;
 
-  constructor(private bookingsService: BookingsService) {}
+  constructor(
+    private bookingsService: BookingsService,
+    private totalElementsService: TotalElementsService,
+  ) {}
 
   public ngAfterViewInit(): void {
     merge(this.paginator.page, this.sort.sortChange).pipe(
@@ -46,6 +49,8 @@ export class BookingsComponent implements AfterViewInit {
       (response: Response<Booking>) => {
         this.dataSource = response.content;
         this.length = response.totalElements;
+
+        this.totalElementsService.update('bookings', response.totalElements);
       }
     );
   }
