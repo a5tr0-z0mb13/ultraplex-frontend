@@ -23,6 +23,7 @@ import { ScreeningDialogComponent, ScreeningDialogResponse } from './screening-d
     MatToolbarModule,
     TableContainerComponent,
   ],
+  selector: 'ultraplex-screenings',
   templateUrl: './screenings.component.html',
 })
 export class ScreeningsComponent {

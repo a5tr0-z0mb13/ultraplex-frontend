@@ -23,6 +23,7 @@ import { concatMap } from 'rxjs';
     MatSelectModule,
     ReactiveFormsModule,
   ],
+  selector: 'ultraplex-booking-dialog',
   templateUrl: './booking-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -16,6 +16,7 @@ import { Column, TableContainerComponent } from '../common/table-container.compo
     MatToolbarModule,
     TableContainerComponent,
   ],
+  selector: 'ultraplex-bookings',
   templateUrl: './bookings.component.html'
 })
 export class BookingsComponent {

@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
     ReactiveFormsModule,
   ],
+  selector: 'ultraplex-screen-dialog',
   templateUrl: './screen-dialog.component.html'
 })
 export class ScreenDialogComponent implements OnInit {

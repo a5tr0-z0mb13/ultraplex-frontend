@@ -23,6 +23,7 @@ import { MovieDialogComponent } from './movie-dialog.component';
     MatToolbarModule,
     TableContainerComponent,
   ],
+  selector: 'ultraplex-movies',
   templateUrl: './movies.component.html'
 })
 export class MoviesComponent {

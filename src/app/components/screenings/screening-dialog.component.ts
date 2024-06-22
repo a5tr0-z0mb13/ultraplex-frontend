@@ -31,6 +31,7 @@ export interface ScreeningDialogResponse extends ScreeningRequestBody {
     MatSelectModule,
     ReactiveFormsModule,
   ],
+  selector: 'ultraplex-screening-dialog',
   templateUrl: './screening-dialog.component.html',
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -23,6 +23,7 @@ import { ScreenDialogComponent } from './screen-dialog.component';
     MatToolbarModule,
     TableContainerComponent,
   ],
+  selector: 'ultraplex-screens',
   templateUrl: './screens.component.html',
 })
 export class ScreensComponent {
@@ -39,7 +40,7 @@ export class ScreensComponent {
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private screensService: ScreensService,
+    public screensService: ScreensService,
   ) {
     this.cinemaId = this.activatedRoute.snapshot.paramMap.get('cinemaId');
   }

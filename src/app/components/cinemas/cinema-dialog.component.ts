@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
     ReactiveFormsModule,
   ],
+  selector: 'ultraplex-cinema-dialog',
   templateUrl: './cinema-dialog.component.html'
 })
 export class CinemaDialogComponent implements OnInit {
