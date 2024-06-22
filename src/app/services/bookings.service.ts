@@ -1,10 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
 import { Booking, BookingRequestBody, Response } from '../models';
-import { environment } from '../../environments/environment';
+import { APIService } from './api.service';
 
 /**
  * Booking API service
@@ -13,15 +12,15 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class BookingsService {
-  private readonly path: string = `${environment.cinemas.api.url}/bookings`;
+  private readonly path: string = '/bookings';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private apiService: APIService<BookingRequestBody, Booking>) {}
 
-  public list(): Observable<Response<Booking[]>> {
-    return this.httpClient.get<Response<Booking[]>>(this.path);
+  public list(page?: number, size?: number, sort?: string): Observable<Response<Booking>> {
+    return this.apiService.list(this.path, page, size, sort);
   }
 
-  public create(body: BookingRequestBody): unknown {
-    return this.httpClient.put(this.path, body);
+  public create(body: BookingRequestBody): Observable<null> {
+    return this.apiService.create(this.path, body);
   }
 }

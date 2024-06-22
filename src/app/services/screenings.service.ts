@@ -1,25 +1,24 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { environment } from '../../environments/environment';
 import { Response, Screening, ScreeningRequestBody } from '../models';
+import { APIService } from './api.service';
 
 /**
- * Screening API service
+ * Screenings service
  */
 @Injectable({
   providedIn: 'root',
 })
 export class ScreeningsService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private apiService: APIService<ScreeningRequestBody, Screening>) {}
 
-  public list(cinemaId: number): Observable<Response<Screening[]>> {
-    return this.httpClient.get<Response<Screening[]>>(`${environment.cinemas.api.url}/cinemas/${cinemaId}`);
+  public list(cinemaId: string | number, page?: number, size?: number, sort?: string): Observable<Response<Screening>> {
+    return this.apiService.list(`/cinemas/${cinemaId}/screenings`, page, size, sort);
   }
 
-  public create(cinemaId: number, screenId: number, body: ScreeningRequestBody): unknown {
-    return this.httpClient.put(`${environment.cinemas.api.url}/cinemas/${cinemaId}/screens/${screenId}/screenings`, body);
+  public create(cinemaId: string | number, screenId: string | number, body: ScreeningRequestBody): Observable<null> {
+    return this.apiService.create(`/cinemas/${cinemaId}/screens/${screenId}/screenings`, body);
   }
 }

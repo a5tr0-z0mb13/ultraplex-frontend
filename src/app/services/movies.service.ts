@@ -1,27 +1,26 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { environment } from '../../environments/environment';
 import { Movie, MovieRequestBody, Response } from '../models';
+import { APIService } from './api.service';
 
 /**
- * Movie API service
+ * Movies service
  */
 @Injectable({
   providedIn: 'root',
 })
 export class MoviesService {
-  private readonly path: string = `${environment.cinemas.api.url}/movies`;
+  private readonly path: string = '/movies';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private apiService: APIService<MovieRequestBody, Movie>) {}
 
-  public list(): Observable<Response<Movie[]>> {
-    return this.httpClient.get<Response<Movie[]>>(this.path);
+  public list(page?: number, size?: number, sort?: string): Observable<Response<Movie>> {
+    return this.apiService.list(this.path, page, size, sort);
   }
 
-  public create(body: MovieRequestBody): unknown {
-    return this.httpClient.put(this.path, body);
+  public create(body: MovieRequestBody): Observable<null> {
+    return this.apiService.create(this.path, body);
   }
 }

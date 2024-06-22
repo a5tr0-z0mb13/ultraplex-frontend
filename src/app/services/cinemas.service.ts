@@ -1,27 +1,26 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { environment } from '../../environments/environment';
 import { Cinema, CinemaRequestBody, Response } from '../models';
+import { APIService } from './api.service';
 
 /**
- * Cinema API service
+ * Cinemas service
  */
 @Injectable({
   providedIn: 'root',
 })
 export class CinemasService {
-  private readonly path: string = `${environment.cinemas.api.url}/cinemas`;
+  private readonly path: string = '/cinemas';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private apiService: APIService<CinemaRequestBody, Cinema>) {}
 
-  public list(): Observable<Response<Cinema[]>> {
-    return this.httpClient.get<Response<Cinema[]>>(this.path);
+  public list(page?: number, size?: number, sort?: string): Observable<Response<Cinema>> {
+    return this.apiService.list(this.path, page, size, sort);
   }
 
-  public create(body: CinemaRequestBody): unknown {
-    return this.httpClient.put(this.path, body);
+  public create(body: CinemaRequestBody): Observable<null> {
+    return this.apiService.create(this.path, body);
   }
 }
