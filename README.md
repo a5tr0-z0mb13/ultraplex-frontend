@@ -30,6 +30,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## ToDo
 
+* Prettier / ESLint configuration
 * Reduce code replication around tables and dialogs (already started)
 * DataSource layer between tables and services?
 * Unit tests
